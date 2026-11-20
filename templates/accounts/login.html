@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Log in — {{ STORE_NAME }}{% endblock %}
+{% block content %}
+<h1>Log in</h1>
+{% include "accounts/_form.html" with submit="Log in" %}
+<p>New here? <a href="{% url 'accounts:register' %}">Create an account</a>.</p>
+{% endblock %}

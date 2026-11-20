@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}My orders — {{ STORE_NAME }}{% endblock %}
+{% block content %}
+<h1>My orders</h1>
+{% if orders %}
+<div class="table-scroll">
+<table class="cart-table">
+  <thead><tr><th scope="col">Order</th><th scope="col">Date</th><th scope="col">Items</th><th scope="col">Total</th><th scope="col">Status</th></tr></thead>
+  <tbody>
+  {% for o in orders %}
+    <tr>
+      <td><a href="{{ o.get_absolute_url }}">#{{ o.id }}</a></td>
+      <td>{{ o.created|date:"j M Y" }}</td>
+      <td>{{ o.items.all|length }}</td>
+      <td>Rs. {{ o.get_total }}</td>
+      <td><span class="status status-{{ o.status }}">{{ o.get_status_display }}</span></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<p class="empty">You haven't placed an order yet. <a href="{% url 'store:product_list' %}">Start shopping</a>.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,14 @@
+<article class="card">
+  <a href="{{ p.get_absolute_url }}" class="card-link">
+    {% if p.image %}
+      <img class="thumb" src="{{ p.image.url }}" alt="{{ p.name }}" loading="lazy">
+    {% else %}
+      <div class="thumb patch" aria-hidden="true"><span>{{ p.name|make_list|first }}</span></div>
+    {% endif %}
+    <h3 class="card-title">{{ p.name }}</h3>
+  </a>
+  <p class="card-meta">
+    <span class="price">Rs. {{ p.price }}</span>
+    {% if not p.in_stock %}<span class="badge-out">Sold out</span>{% endif %}
+  </p>
+</article>

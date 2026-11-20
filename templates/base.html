@@ -1,0 +1,103 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ STORE_NAME }} — official college merchandise{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Hoodies, tees, stationery and gifts from the official college store. Pay with eSewa.{% endblock %}">
+  <link rel="canonical" href="{{ request.build_absolute_uri }}">
+  {% block og %}
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ STORE_NAME }}">
+  <meta property="og:url" content="{{ request.build_absolute_uri }}">
+  {% endblock %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;700&family=Graduate&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  {% if GOOGLE_ANALYTICS_ID %}
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ GOOGLE_ANALYTICS_ID }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ GOOGLE_ANALYTICS_ID }}');
+  </script>
+  {% endif %}
+
+  {% if FACEBOOK_PIXEL_ID %}
+  <!-- Meta (Facebook) Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '{{ FACEBOOK_PIXEL_ID }}');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id={{ FACEBOOK_PIXEL_ID }}&ev=PageView&noscript=1"></noscript>
+  {% endif %}
+
+  {% if TWITTER_PIXEL_ID %}
+  <!-- X (Twitter) conversion tracking -->
+  <script>
+    !function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+    },s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='https://static.ads-twitter.com/uwt.js',
+    a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+    twq('config','{{ TWITTER_PIXEL_ID }}');
+  </script>
+  {% endif %}
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="{% url 'store:product_list' %}">
+        <span class="pennant" aria-hidden="true"></span>
+        <span class="brand-name">{{ STORE_NAME }}</span>
+      </a>
+      <form class="search" action="{% url 'store:search' %}" method="get" role="search">
+        <label for="q" class="sr-only">Search products</label>
+        <input id="q" type="search" name="q" placeholder="Search hoodies, mugs, notebooks…" value="{{ q|default:'' }}">
+      </form>
+      <nav class="account-nav" aria-label="Account">
+        {% if user.is_authenticated %}
+          <a href="{% url 'orders:order_history' %}">My orders</a>
+          <form method="post" action="{% url 'accounts:logout' %}" class="inline">{% csrf_token %}<button class="link">Log out</button></form>
+        {% else %}
+          <a href="{% url 'accounts:login' %}">Log in</a>
+        {% endif %}
+        <a class="cart-link" href="{% url 'cart:cart_detail' %}">Cart <span class="cart-count" data-cart-count>{{ cart|length }}</span></a>
+      </nav>
+    </div>
+    <nav class="wrap cat-nav" aria-label="Categories">
+      <a href="{% url 'store:product_list' %}" {% if request.resolver_match.url_name == 'product_list' %}aria-current="page"{% endif %}>Everything</a>
+      {% for c in nav_categories %}
+        <a href="{{ c.get_absolute_url }}" {% if category and category.pk == c.pk %}aria-current="page"{% endif %}>{{ c.name }}</a>
+      {% endfor %}
+    </nav>
+  </header>
+
+  <main id="main" class="wrap">
+    {% if messages %}
+      <ul class="messages" role="status">
+        {% for m in messages %}<li class="msg msg-{{ m.tags }}">{{ m }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <p>{{ STORE_NAME }} is run by the student council. Proceeds fund club activities.</p>
+      <p>Payments are processed securely by eSewa.</p>
+    </div>
+  </footer>
+  <script src="{% static 'js/cart.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

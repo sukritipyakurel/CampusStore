@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Your cart — {{ STORE_NAME }}{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+<h1>Your cart</h1>
+{% if items %}
+<div class="table-scroll">
+<table class="cart-table">
+  <thead><tr><th scope="col">Product</th><th scope="col">Price</th><th scope="col">Quantity</th><th scope="col">Total</th><th scope="col"><span class="sr-only">Remove</span></th></tr></thead>
+  <tbody>
+  {% for item in items %}
+    {% with p=item.product %}
+    <tr data-row="{{ p.id }}">
+      <td><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></td>
+      <td>Rs. {{ item.price }}</td>
+      <td>
+        <form action="{% url 'cart:cart_add' p.id %}" method="post" class="qty-form" data-ajax-qty>
+          {% csrf_token %}
+          <label for="qty-{{ p.id }}" class="sr-only">Quantity of {{ p.name }}</label>
+          <input id="qty-{{ p.id }}" type="number" name="quantity" min="1" max="{{ p.stock }}" value="{{ item.quantity }}">
+          <input type="hidden" name="override" value="True">
+          <noscript><button class="link">Update</button></noscript>
+        </form>
+      </td>
+      <td data-line-total>Rs. {{ item.total_price }}</td>
+      <td>
+        <form action="{% url 'cart:cart_remove' p.id %}" method="post" data-ajax-remove>
+          {% csrf_token %}<button class="link">Remove</button>
+        </form>
+      </td>
+    </tr>
+    {% endwith %}
+  {% endfor %}
+  </tbody>
+  <tfoot><tr><th scope="row" colspan="3">Subtotal</th><td colspan="2"><strong>Rs. <span data-cart-total>{{ cart.get_total_price|floatformat:2 }}</span></strong></td></tr></tfoot>
+</table>
+</div>
+<div class="actions">
+  <a href="{% url 'store:product_list' %}" class="btn btn-ghost">Keep shopping</a>
+  <a href="{% url 'orders:checkout' %}" class="btn">Check out</a>
+</div>
+{% include "store/_shelf.html" with products=suggestions heading="Often bought together" %}
+{% else %}
+<p class="empty">Your cart is empty. <a href="{% url 'store:product_list' %}">Browse the store</a> to add something.</p>
+{% endif %}
+{% endblock %}

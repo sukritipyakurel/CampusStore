@@ -1,0 +1,25 @@
+{% if page.object_list %}
+  <form class="sort" method="get">
+    {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+    <label for="sort">Sort by</label>
+    <select id="sort" name="sort" data-autosubmit>
+      <option value="new" {% if sort == 'new' %}selected{% endif %}>Newest</option>
+      <option value="price_low" {% if sort == 'price_low' %}selected{% endif %}>Price, low to high</option>
+      <option value="price_high" {% if sort == 'price_high' %}selected{% endif %}>Price, high to low</option>
+      <option value="name" {% if sort == 'name' %}selected{% endif %}>Name</option>
+    </select>
+    <noscript><button>Apply</button></noscript>
+  </form>
+  <div class="grid">
+    {% for p in page.object_list %}{% include "store/_product_card.html" %}{% endfor %}
+  </div>
+  {% if page.has_other_pages %}
+  <nav class="pager" aria-label="Pages">
+    {% if page.has_previous %}<a href="?{% if q %}q={{ q|urlencode }}&{% endif %}sort={{ sort }}&page={{ page.previous_page_number }}">Previous</a>{% endif %}
+    <span>Page {{ page.number }} of {{ page.paginator.num_pages }}</span>
+    {% if page.has_next %}<a href="?{% if q %}q={{ q|urlencode }}&{% endif %}sort={{ sort }}&page={{ page.next_page_number }}">Next</a>{% endif %}
+  </nav>
+  {% endif %}
+{% else %}
+  <p class="empty">No products match. <a href="{% url 'store:product_list' %}">Browse everything</a>.</p>
+{% endif %}

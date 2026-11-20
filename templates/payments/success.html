@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Payment received — {{ STORE_NAME }}{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+<section class="handoff">
+  <h1 class="varsity">Paid. Thank you!</h1>
+  <p>Order #{{ order.id }} is confirmed. eSewa reference <strong>{{ payment.ref_id }}</strong>.</p>
+  <p>We'll email {{ order.email }} when it's ready to collect.</p>
+  <p><a class="btn" href="{{ order.get_absolute_url }}">View receipt</a></p>
+</section>
+{% endblock %}
+{% block extra_js %}
+{% if GOOGLE_ANALYTICS_ID %}<script>gtag('event','purchase',{transaction_id:'{{ payment.transaction_uuid }}',value:{{ payment.amount }},currency:'NPR'});</script>{% endif %}
+{% if FACEBOOK_PIXEL_ID %}<script>fbq('track','Purchase',{value:{{ payment.amount }},currency:'NPR'});</script>{% endif %}
+{% if TWITTER_PIXEL_ID %}<script>twq('event','tw-purchase',{value:{{ payment.amount }},currency:'NPR'});</script>{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Checkout — {{ STORE_NAME }}{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+<h1>Checkout</h1>
+<div class="checkout">
+  <form method="post" class="stack" id="checkout-form" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="field{% if field.errors %} has-error{% endif %}">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        <p class="error" data-error-for="{{ field.name }}">{{ field.errors|join:" " }}</p>
+      </div>
+    {% endfor %}
+    {% if not user.is_authenticated %}<p class="hint"><a href="{% url 'accounts:login' %}?next={{ request.path }}">Log in</a> to keep this order in your history.</p>{% endif %}
+    <button class="btn btn-esewa">Pay Rs. {{ total|floatformat:2 }} with eSewa</button>
+  </form>
+  <aside class="summary" aria-label="Order summary">
+    <h2>Order summary</h2>
+    <ul>
+      {% for item in items %}<li><span>{{ item.quantity }} × {{ item.product.name }}</span><span>Rs. {{ item.total_price }}</span></li>{% endfor %}
+    </ul>
+    <p class="row"><span>Subtotal</span><span>Rs. {{ subtotal|floatformat:2 }}</span></p>
+    <p class="row"><span>Delivery</span><span>Rs. {{ delivery|floatformat:2 }}</span></p>
+    <p class="row total"><span>Total</span><span>Rs. {{ total|floatformat:2 }}</span></p>
+  </aside>
+</div>
+{% endblock %}
+{% block extra_js %}{% load static %}<script src="{% static 'js/checkout.js' %}" defer></script>{% endblock %}

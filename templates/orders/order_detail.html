@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }} — {{ STORE_NAME }}{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+<h1>Order #{{ order.id }}</h1>
+<p class="status status-{{ order.status }}">{{ order.get_status_display }}</p>
+<div class="receipt">
+  <p><strong>{{ order.full_name }}</strong><br>{{ order.address }}, {{ order.city }}<br>{{ order.phone }} · {{ order.email }}</p>
+  <p class="hint">Placed {{ order.created|date:"j M Y, g:i a" }}</p>
+  <div class="table-scroll">
+  <table class="cart-table">
+    <thead><tr><th scope="col">Item</th><th scope="col">Price</th><th scope="col">Qty</th><th scope="col">Total</th></tr></thead>
+    <tbody>{% for i in order.items.all %}<tr><td>{{ i.product.name }}</td><td>Rs. {{ i.price }}</td><td>{{ i.quantity }}</td><td>Rs. {{ i.get_cost }}</td></tr>{% endfor %}</tbody>
+    <tfoot>
+      <tr><th scope="row" colspan="3">Delivery</th><td>Rs. {{ order.delivery_charge }}</td></tr>
+      <tr><th scope="row" colspan="3">Total</th><td><strong>Rs. {{ order.get_total }}</strong></td></tr>
+    </tfoot>
+  </table>
+  </div>
+  {% with pay=order.payments.first %}{% if pay and order.paid %}<p class="hint">eSewa reference: {{ pay.ref_id }} · Transaction {{ pay.transaction_uuid }}</p>{% endif %}{% endwith %}
+</div>
+{% if not order.paid %}
+  <form action="{% url 'payments:pay' order.id %}" method="get"><button class="btn btn-esewa">Pay with eSewa</button></form>
+{% endif %}
+<button class="btn btn-ghost" onclick="window.print()">Print receipt</button>
+{% endblock %}

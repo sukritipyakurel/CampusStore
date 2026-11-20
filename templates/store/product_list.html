@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1 class="varsity">Wear the crest.</h1>
+  <p>Hoodies, tees, stationery and gifts from your college. Order online, pay with eSewa, pick up on campus.</p>
+</section>
+{% include "store/_product_grid.html" %}
+{% include "store/_shelf.html" with products=recent heading="Recently viewed" %}
+{% endblock %}

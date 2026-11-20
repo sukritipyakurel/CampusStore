@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Payment not completed — {{ STORE_NAME }}{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+<section class="handoff">
+  <h1>Payment not completed</h1>
+  <p>{{ reason }}</p>
+  {% if order and not order.paid %}
+    <p>You haven't been charged for order #{{ order.id }}. You can try again.</p>
+    <p><a class="btn btn-esewa" href="{% url 'payments:pay' order.id %}">Try eSewa again</a> <a class="btn btn-ghost" href="{% url 'cart:cart_detail' %}">Back to cart</a></p>
+  {% else %}
+    <p><a class="btn btn-ghost" href="{% url 'cart:cart_detail' %}">Back to cart</a></p>
+  {% endif %}
+</section>
+{% endblock %}

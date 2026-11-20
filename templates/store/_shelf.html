@@ -1,0 +1,8 @@
+{% if products %}
+<section class="shelf">
+  <h2>{{ heading }}</h2>
+  <div class="grid grid-small">
+    {% for p in products %}{% include "store/_product_card.html" %}{% endfor %}
+  </div>
+</section>
+{% endif %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Redirecting to eSewa…{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+<section class="handoff">
+  <h1>Taking you to eSewa</h1>
+  <p>Order #{{ order.id }} · Rs. {{ fields.total_amount }}</p>
+  <form id="esewa-form" action="{{ action }}" method="post">
+    {% for name, value in fields.items %}<input type="hidden" name="{{ name }}" value="{{ value }}">{% endfor %}
+    <button class="btn btn-esewa">Continue to eSewa</button>
+  </form>
+  <p class="hint">If nothing happens in a few seconds, press the button.</p>
+</section>
+{% endblock %}
+{% block extra_js %}<script>document.getElementById('esewa-form').submit();</script>{% endblock %}

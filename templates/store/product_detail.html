@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — {{ STORE_NAME }}{% endblock %}
+{% block meta_description %}{{ product.seo_description }}{% endblock %}
+{% block og %}
+<meta property="og:type" content="product">
+<meta property="og:title" content="{{ product.name }}">
+<meta property="og:description" content="{{ product.seo_description }}">
+<meta property="og:url" content="{{ request.build_absolute_uri }}">
+{% if product.image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ product.image.url }}">{% endif %}
+<meta name="twitter:card" content="summary_large_image">
+{% endblock %}
+{% block extra_head %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Product","name":"{{ product.name|escapejs }}","description":"{{ product.seo_description|escapejs }}","category":"{{ product.category.name|escapejs }}",
+ "offers":{"@type":"Offer","priceCurrency":"NPR","price":"{{ product.price }}","availability":"https://schema.org/{% if product.in_stock %}InStock{% else %}OutOfStock{% endif %}"}}
+</script>
+{% endblock %}
+{% block content %}
+<nav class="crumbs" aria-label="Breadcrumb"><a href="{% url 'store:product_list' %}">Everything</a> / <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></nav>
+<div class="detail">
+  {% if product.image %}
+    <img class="detail-img" src="{{ product.image.url }}" alt="{{ product.name }}">
+  {% else %}
+    <div class="detail-img patch" aria-hidden="true"><span>{{ product.name|make_list|first }}</span></div>
+  {% endif %}
+  <div class="detail-info">
+    <h1>{{ product.name }}</h1>
+    <p class="price price-lg">Rs. {{ product.price }}</p>
+    <p class="desc">{{ product.description|linebreaksbr }}</p>
+    {% if product.in_stock %}
+      <form action="{% url 'cart:cart_add' product.id %}" method="post" class="add-form" data-ajax-add>
+        {% csrf_token %}
+        <label for="id_quantity">Quantity</label>
+        {{ cart_form.quantity }}
+        {{ cart_form.override }}
+        <button class="btn">Add to cart</button>
+        <p class="hint">{{ product.stock }} in stock</p>
+        <p class="add-status" data-add-status role="status"></p>
+      </form>
+    {% else %}
+      <p class="badge-out">Sold out. Check back after the next restock.</p>
+    {% endif %}
+  </div>
+</div>
+{% include "store/_shelf.html" with products=bought_with heading="Often bought together" %}
+{% with "More in "|add:product.category.name as more_heading %}
+{% include "store/_shelf.html" with products=related heading=more_heading %}
+{% endwith %}
+{% include "store/_shelf.html" with products=recent heading="Recently viewed" %}
+{% endblock %}
+{% block extra_js %}
+{% if FACEBOOK_PIXEL_ID %}<script>fbq('track','ViewContent',{content_ids:['{{ product.id }}'],content_type:'product',value:{{ product.price }},currency:'NPR'});</script>{% endif %}
+{% endblock %}

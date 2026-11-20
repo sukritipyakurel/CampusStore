@@ -1,29 +1,18 @@
-/* Campus Store — varsity felt palette */
+/* Campus Store — blue palette */
 :root {
-  --ivy: #1E4636;        /* primary: college green */
-  --ivy-deep: #143026;
-  --gold: #E3A92B;       /* pennant gold */
-  --paper: #F3F5F2;      /* page background */
-  --ink: #1C2420;
-  --muted: #5C6A63;
-  --line: #D5DCD7;
-  --brick: #B23A2E;      /* errors / sold out */
-  --esewa: #60BB46;      /* eSewa brand green for pay buttons */
+  --ivy: #1D4ED8;        /* main blue: buttons, links, headings */
+  --ivy-deep: #1E3A8A;   /* dark blue: header bar, button hover */
+  --gold: #60A5FA;       /* light blue: accents, cart badge, focus ring */
+  --paper: #FFFFFF;      /* page background: white */
+  --ink: #1F2937;        /* body text */
+  --muted: #6B7280;      /* secondary text */
+  --line: #E5E7EB;       /* borders */
+  --brick: #DC2626;      /* errors / sold out */
+  --esewa: #60BB46;      /* keep: eSewa's brand green */
   --radius: 6px;
   --font-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --font-display: "Graduate", "Rockwell", Georgia, serif;
   color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #121815;
-    --ink: #E7ECE9;
-    --muted: #9DABA4;
-    --line: #2C3732;
-    --ivy: #3E8A68;
-    --ivy-deep: #0C1A14;
-    color-scheme: dark;
-  }
 }
 
 * { box-sizing: border-box; }
@@ -75,7 +64,7 @@ main.wrap { padding-top: 1.75rem; padding-bottom: 3rem; min-height: 60vh; }
 .thumb { aspect-ratio: 4 / 5; width: 100%; object-fit: cover; border-radius: var(--radius); background: var(--line); }
 .patch { display: grid; place-items: center; background: var(--ivy); color: var(--gold); font-family: var(--font-display); font-size: 4.5rem;
   background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px); background-size: 6px 6px; }
-.patch span { border: 3px dashed rgba(227,169,43,.55); border-radius: 50%; width: 1.6em; height: 1.6em; display: grid; place-items: center; }
+.patch span { border: 3px dashed rgba(96,165,250,.55); border-radius: 50%; width: 1.6em; height: 1.6em; display: grid; place-items: center; }
 .card-title { font-size: 1rem; font-weight: 500; margin: .6rem 0 .15rem; }
 .card-link:hover .card-title { text-decoration: underline; }
 .card-meta { display: flex; gap: .5rem; align-items: center; margin: 0; }
@@ -132,8 +121,8 @@ input, select, textarea { font: inherit; color: var(--ink); background: var(--pa
 
 /* Status / messages */
 .messages { list-style: none; padding: 0; margin: 0 0 1.25rem; }
-.msg { padding: .75rem 1rem; border-radius: var(--radius); border-left: 4px solid var(--ivy); background: rgba(30,70,54,.08); margin-bottom: .5rem; }
-.msg-error { border-color: var(--brick); background: rgba(178,58,46,.08); }
+.msg { padding: .75rem 1rem; border-radius: var(--radius); border-left: 4px solid var(--ivy); background: rgba(29,78,216,.08); margin-bottom: .5rem; }
+.msg-error { border-color: var(--brick); background: rgba(220,38,38,.08); }
 .status { display: inline-block; font-weight: 500; }
 .status-paid, .status-shipped { color: var(--ivy); }
 .status-failed, .status-cancelled { color: var(--brick); }
